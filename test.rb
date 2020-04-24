@@ -35,5 +35,7 @@ class SqlTest < Minitest::Test
 		DB.exec("UPDATE contacts.email_address SET primary_email = True WHERE email = 'test@gmail.com';")
 		res = DB.exec("SELECT * FROM contacts.email_address WHERE email = 'test@gmail.com';")
 		assert_equal(res[0]['primary_email'], 't')
+		res = DB.exec("SELECT * FROM contacts.email_address WHERE email = 'rowland@stillclever.com';")
+		assert_equal(res[0]['primary_email'], 'f')
 	end
 end
