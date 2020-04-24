@@ -38,4 +38,12 @@ class SqlTest < Minitest::Test
 		res = DB.exec("SELECT * FROM contacts.email_address WHERE email = 'rowland@stillclever.com';")
 		assert_equal(res[0]['primary_email'], 'f')
 	end
+
+	def test_new_primary_single_query
+		DB.exec("UPDATE contacts.email_address AS e SET primary_email = c.primary_email FROM (values ('rowland@stillclever.com', False), ('test@gmail.com', True)) as c(email, primary_email) WHERE c.email = e.email;")
+		res = DB.exec("SELECT * FROM contacts.email_address WHERE email = 'test@gmail.com';")
+		assert_equal(res[0]['primary_email'], 't')
+		res = DB.exec("SELECT * FROM contacts.email_address WHERE email = 'rowland@stillclever.com';")
+		assert_equal(res[0]['primary_email'], 'f')
+	end
 end
