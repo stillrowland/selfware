@@ -30,4 +30,17 @@ create unique index idx_allow_only_one_true ON rowland.email_address(person_id, 
 insert into rowland.people(name) values ('Rowland'), ('Cat');
 insert into rowland.email_address(person_id, email, primary_email) values (1, 'rowland@stillclever.com', True), (1, 'test@gmail.com', False);
 
+CREATE FUNCTION rowland.people_get(out status smallint, out js json) as $$
+BEGIN 
+	status := 200;
+	js := coalesce((
+			select json_agg(r) from (
+				select id, name
+				from rowland.people
+				order by id
+			) r
+		), '[]');
+END;
+$$ LANGUAGE plpgsql;
+
 COMMIT;

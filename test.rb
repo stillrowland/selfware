@@ -47,4 +47,10 @@ class SqlTest < Minitest::Test
 		assert_equal(res[0]['primary_email'], 'f')
 	end
 
+	def test_people_get
+		res = DB.exec("SELECT status, js FROM rowland.people_get();")
+		assert_equal(res[0]['status'], "200")
+		puts res[0]['js']
+	end
+
 end
