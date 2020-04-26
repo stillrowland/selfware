@@ -50,7 +50,17 @@ class SqlTest < Minitest::Test
 	def test_people_get
 		res = DB.exec("SELECT status, js FROM rowland.people_get();")
 		assert_equal(res[0]['status'], "200")
-		puts res[0]['js']
+	end
+
+	def test_select_from_contacts_view
+		res = DB.exec("SELECT * FROM rowland.contacts;")
+		assert_equal(res[0]['email'], "rowland@stillclever.com")
+		assert_equal(res[0]['name'], "Rowland")
+	end
+
+	def test_contacts_get
+		res = DB.exec("SELECT status, js FROM rowland.contacts_get();")
+		assert_equal(res[0]['status'], '200')
 	end
 
 end

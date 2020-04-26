@@ -26,6 +26,13 @@ create table rowland.email_address(
 create index on rowland.email_address(email);
 create unique index idx_allow_only_one_true ON rowland.email_address(person_id, primary_email) WHERE primary_email;
 
+CREATE VIEW rowland.contacts AS
+	SELECT p.id, name, email
+	FROM rowland.people p
+	INNER JOIN rowland.email_address e
+	ON p.id = e.person_id
+	WHERE primary_email;
+
 
 insert into rowland.people(name) values ('Rowland'), ('Cat');
 insert into rowland.email_address(person_id, email, primary_email) values (1, 'rowland@stillclever.com', True), (1, 'test@gmail.com', False);
@@ -38,6 +45,19 @@ BEGIN
 				select id, name
 				from rowland.people
 				order by id
+			) r
+		), '[]');
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION rowland.contacts_get(out status smallint, out js json) AS $$
+BEGIN
+	status := 200;
+	js := coalesce((
+			SELECT json_agg(r) FROM (
+				SELECT id, name, email
+				FROM rowland.contacts
+				ORDER BY id
 			) r
 		), '[]');
 END;
