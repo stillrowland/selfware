@@ -1,4 +1,5 @@
 require 'pg'
+require 'json'
 require 'minitest/autorun'
 
 DB = PG::Connection.new(dbname: 'selfware', user:'selfware')
@@ -60,7 +61,10 @@ class SqlTest < Minitest::Test
 
 	def test_contacts_get
 		res = DB.exec("SELECT status, js FROM rowland.contacts_get();")
+		js = JSON.parse(res[0]['js'])
 		assert_equal(res[0]['status'], '200')
+		assert_equal(js[0]['email'], "rowland@stillclever.com")
+		assert_equal(js[0]['name'], "Rowland")
 	end
 
 end

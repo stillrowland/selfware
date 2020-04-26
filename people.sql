@@ -19,7 +19,7 @@ create index on rowland.people(name);
 
 create table rowland.email_address(
 	id serial primary key,
-	person_id integer not null references contacts.people(id) on delete cascade,
+	person_id integer not null references rowland.people(id) on delete cascade,
 	email text unique constraint valid_email check (email ~ '\A\S+@\S+\.\S+\Z'),
 	primary_email bool
 );
@@ -34,8 +34,9 @@ CREATE VIEW rowland.contacts AS
 	WHERE primary_email;
 
 
-insert into rowland.people(name) values ('Rowland'), ('Cat');
+insert into rowland.people(name) values ('Rowland'), ('Cat'), ('Dog');
 insert into rowland.email_address(person_id, email, primary_email) values (1, 'rowland@stillclever.com', True), (1, 'test@gmail.com', False);
+insert into rowland.email_address(person_id, email, primary_email) values (3, 'test@test.com', True), (3, 'test@agmail.com', False);
 
 CREATE FUNCTION rowland.people_get(out status smallint, out js json) as $$
 BEGIN 
