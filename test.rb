@@ -67,4 +67,11 @@ class SqlTest < Minitest::Test
 		assert_equal(js[0]['name'], "Rowland")
 	end
 
+	def test_contact_get
+		res = DB.exec("SELECT status, js FROM rowland.contact_get(1);")
+		js = JSON.parse(res[0]['js'])
+		assert_equal(res[0]['status'], '200')
+		assert_equal(js['email'], "rowland@stillclever.com")
+		assert_equal(js['name'], "Rowland")
+	end
 end

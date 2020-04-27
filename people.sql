@@ -64,4 +64,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE FUNCTION rowland.contact_get(integer, out status smallint, out js json) AS $$
+BEGIN
+	status := 200;
+	js := row_to_json(r) FROM (
+		SELECT id, name, email
+		FROM rowland.contacts
+		WHERE id = $1
+	) r;
+	if js is null then
+		status := 404;
+		js := '{}';
+	end if;
+end;
+$$ LANGUAGE plpgsql;
+
+
 COMMIT;
