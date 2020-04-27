@@ -16,7 +16,7 @@ end
 
 class SqlTest < Minitest::Test
 	def test_non_unique_primary_insert
-		assert_raises(PG::UniqueViolation) {DB.exec("INSERT INTO contacts.email_address(person_id, email, primary_email) values (1, 'test@email.com', True);")}
+		assert_raises(PG::UniqueViolation) {DB.exec("INSERT INTO rowland.email_address(person_id, email, primary_email) values (1, 'test@email.com', True);")}
 	end
 
 	def test_unique_primary_insert
