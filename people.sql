@@ -79,5 +79,22 @@ BEGIN
 end;
 $$ LANGUAGE plpgsql;
 
+CREATE FUNCTION rowland.contact_add(text, text, out status smallint, out js json) AS $$
+DECLARE
+	person_id integer;
+	e6 text; e7 text; e8 text; e9 text;
+BEGIN
+	INSERT INTO rowland.people (name)
+	VALUES ($1)
+	RETURNING id INTO person_id;
+	INSERT INTO rowland.email_address (person_id, email, primary_email)
+	VALUES (person_id, $2, True);
+	SELECT x.status, x.js into status, js FROM rowland.contact_get(person_id) x;
+EXCEPTION
+	WHEN others THEN get stacked diagnostics e6=returned_sqlstate, e7=message_text, e8=pg_exception_detail, e9=pg_exception_context;
+	js := json_build_object('code',e6,'message',e7,'detail',e8,'context',e9);
+	status := 500;
+END;
+$$ LANGUAGE plpgsql;
 
 COMMIT;
