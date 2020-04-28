@@ -2,7 +2,6 @@ import pandas as pd
 import pytest
 from import_csv import *
 
-
 @pytest.fixture
 def db(): 
     import psycopg2
@@ -31,3 +30,13 @@ def test_df_import(db):
     assert res[0]['status'] == 200 
     assert res[0]['js'][2]['name'] == 'Arf'
     assert res[0]['js'][3]['name'] == 'John Smith'
+
+def test_csv_to_db(db):
+    input_str = 'test.csv'
+    csv_to_db(input_str, db)
+    db.execute("SELECT status, js FROM rowland.contacts_get();")
+    res = db.fetchall()
+    assert res[0]['status'] == 200 
+    assert res[0]['js'][2]['name'] == 'Arf'
+    assert res[0]['js'][3]['name'] == 'John Smith'
+        
