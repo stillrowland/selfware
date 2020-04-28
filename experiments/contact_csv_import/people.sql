@@ -38,6 +38,19 @@ insert into rowland.people(name) values ('Rowland'), ('Cat'), ('Dog');
 insert into rowland.email_address(person_id, email, primary_email) values (1, 'rowland@stillclever.com', True), (1, 'test@gmail.com', False);
 insert into rowland.email_address(person_id, email, primary_email) values (3, 'test@test.com', True), (3, 'test@agmail.com', False);
 
+CREATE FUNCTION rowland.contacts_get(out status smallint, out js json) AS $$
+BEGIN
+	status := 200;
+	js := coalesce((
+			SELECT json_agg(r) FROM (
+				SELECT id, name, email
+				FROM rowland.contacts
+				ORDER BY id
+			) r
+		), '[]');
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE FUNCTION rowland.contact_get(integer, out status smallint, out js json) AS $$
 BEGIN
 	status := 200;
