@@ -19,7 +19,13 @@ def csv_to_db(csv_file, db):
     df = pd.read_csv(csv_file)
     df_import(df, db)
 
-if __name__ == "__main__":
+def parse_filename():
     parser = OptionParser()
     (options, args) = parser.parse_args()
-    print(args[0])
+    if len(args) > 0:
+        return args[0] 
+
+if __name__ == "__main__":
+    filename = parse_filename() 
+    csv_to_db(filename, DB)
+    print("complete")
